@@ -1,0 +1,43 @@
+01) Register a new user
+02) Login with the new user
+03) Add a listing
+04) edit the listing from front end as user and back end as admin
+05) test upgrade listing
+06) test simple search with only keyword
+07) test simple search with only near field
+08) test complex advanced search with custom fields
+09) test listings sorting options
+10) add a review
+11) sort review
+12) claim a listing
+13) test send enquiry
+14) delete listing
+15) test import/export/re-import update
+16) add a new price
+17) add 2 new random custom fields
+18) check notifications of actions previously done (registration, add lsiting)
+19) switch randomly between 3 locations 1 city, 1 region, 1 country
+20) test Geolocation
+21) test search near me
+22) check that all maps are working (home, listings, detail page)
+23) test pinpoint on a listings page
+24) test favourite system
+25) test author page
+26) add an event and link it to a business verify everything work
+27) test expiry listing
+28) test GD booster
+29) add a new location
+30) test google analytics
+31) test re-CAPTCHA integration
+32) test social importer both listing, event and post on facebook page
+33) check stripe
+34) check buddypress
+35) create a new CPT
+36) create a locationless CPT and add a listing to it
+37) check marker clusters
+38) test all autocompleters (search for, near, directions)
+39) browse all GD pages on a tablet and mobile to test media queries
+40) check login box
+41) check shortcodes are working
+42) test dummy data both places and events
+43) Enable debug mode and clean up warning and notices

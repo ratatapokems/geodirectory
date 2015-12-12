@@ -1,6 +1,5 @@
 <?php
-class Test_Listings extends WP_UnitTestCase {
-
+class Test_Reviews extends WP_UnitTestCase {
     public function setUp() {
         parent::setUp();
 
@@ -24,7 +23,9 @@ class Test_Listings extends WP_UnitTestCase {
         parent::tearDown();
     }
 
-    public function test_insert_listing() {
+    function test_insert_review() {
+        $time = current_time('mysql');
+
         $args = array(
             'listing_type' => 'gd_place',
             'post_title' => 'Test Listing Title',
@@ -45,27 +46,30 @@ class Test_Listings extends WP_UnitTestCase {
             'geodir_special_offers' => 'Test offer'
         );
         $post_id = geodir_save_listing($args, true);
-        $this->assertTrue(is_int($post_id));
-    }
 
-    public function test_insert_taxonomy() {
-        $this->test_insert_listing();
-        register_taxonomy(
-            'gd_placecategory',
-            'gd_place',
-            array(
-                'label' => __( 'Category' ),
-                'rewrite' => array( 'slug' => 'gd_category' ),
-                'hierarchical' => true,
-            )
+        $data = array(
+            'comment_post_ID' => $post_id,
+            'comment_author' => 'admin',
+            'comment_author_email' => 'admin@admin.com',
+            'comment_author_url' => 'http://wpgeodirectory.com',
+            'comment_content' => 'content here',
+            'comment_type' => '',
+            'comment_parent' => 0,
+            'user_id' => 1,
+            'comment_author_IP' => '127.0.0.1',
+            'comment_agent' => 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.10) Gecko/2009042316 Firefox/3.0.10 (.NET CLR 3.5.30729)',
+            'comment_date' => $time,
+            'comment_approved' => 1,
         );
-        // Let's create a category
-        $this->cat = $this->factory->term->create(array(
-            'taxonomy' => 'gd_placecategory'
-        ));
-        var_dump($this->cat);
-        $this->assertTrue(is_int($this->cat));
+
+        $comment_id = wp_insert_comment($data);
+
+        $this->assertTrue(is_int($comment_id));
     }
 
-}
+    function test_insert_comment() {
+        $comment_id = $this->factory->comment->create();
 
+        $this->assertTrue(is_int($comment_id));
+    }
+}

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 if [ $# -lt 3 ]; then
-	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version]"
+	echo "usage: $0 <db-name> <db-user> <db-pass> [db-host] [wp-version] [installation-path]"
 	exit 1
 fi
 
@@ -10,9 +10,10 @@ DB_USER=$2
 DB_PASS=$3
 DB_HOST=${4-localhost}
 WP_VERSION=${5-latest}
+INSTALLATION_PATH=$6
 
-WP_TESTS_DIR=${WP_TESTS_DIR-/tmp/wordpress-tests-lib}
-WP_CORE_DIR=${WP_CORE_DIR-/tmp/wordpress/}
+WP_TESTS_DIR=${WP_TESTS_DIR-$INSTALLATION_PATH/wordpress-tests-lib}
+WP_CORE_DIR=${WP_CORE_DIR-$INSTALLATION_PATH/wordpress/}
 
 download() {
     if [ `which curl` ]; then
@@ -28,9 +29,9 @@ elif [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
 	WP_TESTS_TAG="trunk"
 else
 	# http serves a single offer, whereas https serves multiple. we only want one
-	download http://api.wordpress.org/core/version-check/1.7/ /tmp/wp-latest.json
-	grep '[0-9]+\.[0-9]+(\.[0-9]+)?' /tmp/wp-latest.json
-	LATEST_VERSION=$(grep -o '"version":"[^"]*' /tmp/wp-latest.json | sed 's/"version":"//')
+	download http://api.wordpress.org/core/version-check/1.7/ $INSTALLATION_PATH/wp-latest.json
+	grep '[0-9]+\.[0-9]+(\.[0-9]+)?' $INSTALLATION_PATH/wp-latest.json
+	LATEST_VERSION=$(grep -o '"version":"[^"]*' $INSTALLATION_PATH/wp-latest.json | sed 's/"version":"//')
 	if [[ -z "$LATEST_VERSION" ]]; then
 		echo "Latest WordPress version could not be found"
 		exit 1
@@ -49,18 +50,18 @@ install_wp() {
 	mkdir -p $WP_CORE_DIR
 
 	if [[ $WP_VERSION == 'nightly' || $WP_VERSION == 'trunk' ]]; then
-		mkdir -p /tmp/wordpress-nightly
-		download https://wordpress.org/nightly-builds/wordpress-latest.zip  /tmp/wordpress-nightly/wordpress-nightly.zip
-		unzip -q /tmp/wordpress-nightly/wordpress-nightly.zip -d /tmp/wordpress-nightly/
-		mv /tmp/wordpress-nightly/wordpress/* $WP_CORE_DIR
+		mkdir -p $INSTALLATION_PATH/wordpress-nightly
+		download https://wordpress.org/nightly-builds/wordpress-latest.zip  $INSTALLATION_PATH/wordpress-nightly/wordpress-nightly.zip
+		unzip -q $INSTALLATION_PATH/wordpress-nightly/wordpress-nightly.zip -d $INSTALLATION_PATH/wordpress-nightly/
+		mv $INSTALLATION_PATH/wordpress-nightly/wordpress/* $WP_CORE_DIR
 	else
 		if [ $WP_VERSION == 'latest' ]; then
 			local ARCHIVE_NAME='latest'
 		else
 			local ARCHIVE_NAME="wordpress-$WP_VERSION"
 		fi
-		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz  /tmp/wordpress.tar.gz
-		tar --strip-components=1 -zxmf /tmp/wordpress.tar.gz -C $WP_CORE_DIR
+		download https://wordpress.org/${ARCHIVE_NAME}.tar.gz  $INSTALLATION_PATH/wordpress.tar.gz
+		tar --strip-components=1 -zxmf $INSTALLATION_PATH/wordpress.tar.gz -C $WP_CORE_DIR
 	fi
 
 	download https://raw.github.com/markoheijnen/wp-mysqli/master/db.php $WP_CORE_DIR/wp-content/db.php

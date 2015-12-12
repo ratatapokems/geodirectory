@@ -64,7 +64,7 @@ if (is_admin()) {
 /*
  * Declare some global variables for later use.
  */
-global $wpdb, $plugin_prefix, $geodir_addon_list, $plugin_file_name;
+global $wpdb, $plugin_prefix, $geodir_addon_list, $plugin_file_name, $geodir_post_custom_fields_cache;
 $plugin_prefix = $wpdb->prefix . 'geodir_';
 $plugin_file_name = basename(plugin_dir_path(__FILE__)) . '/' . basename(__FILE__);
 
