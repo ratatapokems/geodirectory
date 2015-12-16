@@ -29,6 +29,7 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
     {
         // Wait 10 seconds
         $this->timeouts()->implicitWait(10000);
+        $this->checkForErrors();
     }
 
     function checkForErrors()
@@ -54,6 +55,45 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
                     }
                 }
             }
+        }
+    }
+
+    function maybeUserLogin($redirect, $force=false) {
+        if ($force) {
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/');
+            if ($this->isTextPresent("forgetmenot")) {
+                $this->byId('user_login')->value('test@test.com');
+                $this->byId('user_pass')->value('12345');
+                $this->byId('rememberme')->click();
+                // Submit the form
+                $this->byId('wp-submit')->submit();
+                $this->waitForPageLoad();
+            }
+        }
+        $this->url($redirect);
+        $this->waitForPageLoad();
+        if ($this->isTextPresent("Sign In")) {
+            $this->byId('user_login')->value('test@test.com');
+            $this->byId('user_pass')->value('12345');
+            $this->byId('rememberme')->click();
+            // Submit the form
+            $this->byId('cus_loginform')->submit();
+            $this->waitForPageLoad();
+            $this->url($redirect);
+        }
+    }
+
+    function maybeAdminLogin($redirect) {
+        $this->url($redirect);
+        $this->waitForPageLoad();
+        if ($this->isTextPresent("forgetmenot")) {
+            $this->byId('user_login')->value('admin');
+            $this->byId('user_pass')->value('admin');
+            $this->byId('rememberme')->click();
+            // Submit the form
+            $this->byId('wp-submit')->submit();
+            $this->waitForPageLoad();
+            $this->url($redirect);
         }
     }
 }

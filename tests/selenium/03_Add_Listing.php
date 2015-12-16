@@ -35,7 +35,7 @@ class AddListing extends GD_Test
         $this->byId('geodir_special_offers')->value('Test Offer');
         $this->byId('geodir_accept_term_condition')->click();
         // Submit the form
-        $this->byId('geodir-add-listing-submit')->submit();
+        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
         $this->waitForPageLoad();
         $this->assertTrue( $this->isTextPresent("This is a preview of your listing"), "Not in preview page.");
         // Submit the form
