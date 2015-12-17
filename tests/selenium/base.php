@@ -8,6 +8,7 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         $this->setSeleniumServerRequestsTimeout(60);
         $this->setBrowser('firefox');
         $this->setBrowserUrl(self::GDTEST_BASE_URL);
+        $this->prepareSession()->currentWindow()->maximize();
     }
 
     function isTextPresent($search)
