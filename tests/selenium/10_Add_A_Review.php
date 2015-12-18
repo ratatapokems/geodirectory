@@ -9,12 +9,12 @@ class AddReview extends GD_Test
     public function testAddReview()
     {
         $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/');
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byLinkText('Reviews')->click();
         //Todo: find a way to rate the stars
         $this->byId('comment')->value('Cool xyz');
         $this->byId('submit')->click();
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 }
 ?>

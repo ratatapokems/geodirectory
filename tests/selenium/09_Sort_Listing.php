@@ -10,9 +10,9 @@ class SortListing extends GD_Test
     {
         //Make sure sorting options available
         $this->url(self::GDTEST_BASE_URL.'places/');
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->select($this->byId('sort_by'))->selectOptionByLabel('Review Desc');
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 }
 ?>

@@ -9,7 +9,7 @@ class CheckNotifications extends GD_Test
     public function testCheckNotifications()
     {
         $this->url(self::GDTEST_BASE_URL);
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 }
 ?>

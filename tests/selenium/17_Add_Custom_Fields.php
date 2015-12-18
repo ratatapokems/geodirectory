@@ -10,10 +10,10 @@ class AddCustomFields extends GD_Test
     {
         //Field 1
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gt-text')->click();
         $this->byId('licontainer_new10')->click();
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byId('admin_title')->value('Text Field');
         $this->byId('site_title')->value('Text Field');
         $this->byId('admin_desc')->value('Text Field');
@@ -24,14 +24,14 @@ class AddCustomFields extends GD_Test
         $this->select($this->byId('show_on_listing'))->selectOptionByLabel('Yes');
         $this->select($this->byId('show_on_detail'))->selectOptionByLabel('Yes');
         $this->byId('save')->click();
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
 
         //Field 2
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gt-text')->click();
         $this->byId('licontainer_new11')->click();
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byId('admin_title')->value('Text Field 2');
         $this->byId('site_title')->value('Text Field 2');
         $this->byId('admin_desc')->value('Text Field 2');
@@ -42,7 +42,7 @@ class AddCustomFields extends GD_Test
         $this->select($this->byId('show_on_listing'))->selectOptionByLabel('Yes');
         $this->select($this->byId('show_on_detail'))->selectOptionByLabel('Yes');
         $this->byId('save')->click();
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 }
 ?>

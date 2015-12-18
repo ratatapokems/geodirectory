@@ -26,10 +26,10 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         return md5(uniqid(rand(), true)).'@gmail.com';
     }
 
-    function waitForPageLoad()
+    function waitForPageLoadAndCheckForErrors($timeout=10000)
     {
         // Wait 10 seconds
-        $this->timeouts()->implicitWait(10000);
+        $this->timeouts()->implicitWait($timeout);
         $this->checkForErrors();
     }
 
@@ -68,32 +68,32 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
                 $this->byId('rememberme')->click();
                 // Submit the form
                 $this->byId('wp-submit')->submit();
-                $this->waitForPageLoad();
+                $this->waitForPageLoadAndCheckForErrors();
             }
         }
         $this->url($redirect);
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         if ($this->isTextPresent("Sign In")) {
             $this->byId('user_login')->value('test@test.com');
             $this->byId('user_pass')->value('12345');
             $this->byId('rememberme')->click();
             // Submit the form
             $this->byId('cus_loginform')->submit();
-            $this->waitForPageLoad();
+            $this->waitForPageLoadAndCheckForErrors();
             $this->url($redirect);
         }
     }
 
     function maybeAdminLogin($redirect) {
         $this->url($redirect);
-        $this->waitForPageLoad();
+        $this->waitForPageLoadAndCheckForErrors();
         if ($this->isTextPresent("forgetmenot")) {
             $this->byId('user_login')->value('admin');
             $this->byId('user_pass')->value('admin');
             $this->byId('rememberme')->click();
             // Submit the form
             $this->byId('wp-submit')->submit();
-            $this->waitForPageLoad();
+            $this->waitForPageLoadAndCheckForErrors();
             $this->url($redirect);
         }
     }
