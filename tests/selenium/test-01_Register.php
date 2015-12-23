@@ -1,5 +1,5 @@
 <?php
-class RegisterUser extends GD_Test
+class Register extends GD_Test
 {
     public function setUp()
     {

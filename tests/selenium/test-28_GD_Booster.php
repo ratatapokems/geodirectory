@@ -16,6 +16,8 @@ class GDBooster extends GD_Test
         if (strpos($is_active, 'inactive')) {
             return;
         }
+
+
     }
 }
 ?>

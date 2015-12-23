@@ -1,12 +1,12 @@
 <?php
-class ImportExport extends GD_Test
+class AddNewPrice extends GD_Test
 {
     public function setUp()
     {
         parent::setUp();
     }
 
-    public function testImportExport()
+    public function testAddNewPrice()
     {
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=paymentmanager_fields&subtab=geodir_payment_manager&gd_pagetype=addeditprice');
         $this->waitForPageLoadAndCheckForErrors();

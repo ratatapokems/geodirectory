@@ -1,7 +1,7 @@
 <?php
 class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
 
-    const GDTEST_BASE_URL = 'http://localhost/whoop/';
+    const GDTEST_BASE_URL = 'http://localhost/wordpress/';
 
     public function setUp()
     {
@@ -96,5 +96,20 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
             $this->waitForPageLoadAndCheckForErrors();
             $this->url($redirect);
         }
+    }
+
+    function isElementExists($id = false) {
+        if (!$id) {
+            return;
+        }
+        $exists = true;
+        try {
+            $this->byId($id);
+        } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {
+            if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement == $e->getCode()) {
+                $exists = false;
+            }
+        }
+        return $exists;
     }
 }
