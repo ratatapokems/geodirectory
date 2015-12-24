@@ -5,7 +5,7 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
 
     public function setUp()
     {
-        $this->setSeleniumServerRequestsTimeout(60);
+        $this->setSeleniumServerRequestsTimeout(300);
         $this->setBrowser('firefox');
         $this->setBrowserUrl(self::GDTEST_BASE_URL);
         $this->prepareSession()->currentWindow()->maximize();
@@ -111,5 +111,11 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
             }
         }
         return $exists;
+    }
+
+    function hideAdminBar() {
+        //admin bar causes problem with scroll. So hide admin bar while testing.
+        $script = 'jQuery("#wpadminbar").hide();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
     }
 }

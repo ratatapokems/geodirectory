@@ -43,6 +43,7 @@ plugins = {
 	'bp-default-data'  : "https://github.com/slaFFik/BP-Default-Data.git",
 	'buddypress'  : "https://github.com/buddypress/BuddyPress.git",
 	'buddypress-compliments'  : "https://github.com/%s/buddypress-compliments.git" % github_user,
+	'wordpress-database-reset'  : "https://github.com/chrisberthe/wordpress-database-reset.git",
 	}
 
 for plugin, url in plugins.iteritems():
