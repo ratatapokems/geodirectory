@@ -4,10 +4,17 @@ class EditListing extends GD_Test
     public function setUp()
     {
         parent::setUp();
+
+        //skip test if already completed.
+        if ($this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            $this->markTestSkipped('Skipping '.pathinfo(__FILE__, PATHINFO_FILENAME).' since its already completed......');
+            return;
+        }
     }
 
     public function testEditListing()
     {
+        $this->logInfo('Editing GD Place listing as user......');
         $this->maybeUserLogin(self::GDTEST_BASE_URL.'author/test/?geodir_dashbord=true&stype=gd_place', true);
         $this->assertTrue( $this->isTextPresent("Places By"), "Places By text not found");
         $this->byClassName('geodir-edit')->click();
@@ -27,6 +34,7 @@ class EditListing extends GD_Test
 
     public function testEditAdminListing()
     {
+        $this->logInfo('Editing GD Place listing as admin......');
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/edit.php?post_type=gd_place');
         $this->assertTrue( $this->isTextPresent("post-type-gd_place"), "Not in Places post type");
         $this->byClassName('edit')->click();
@@ -37,6 +45,14 @@ class EditListing extends GD_Test
         $this->byId('publish')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Place updated."), "updated text not found.");
+    }
+
+    public function tearDown()
+    {
+        //write current file number to completed.txt
+        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+        fwrite($completed, $CurrentFileNumber);
     }
 }
 ?>

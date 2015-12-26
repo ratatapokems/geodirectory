@@ -4,10 +4,17 @@ class Stripe extends GD_Test
     public function setUp()
     {
         parent::setUp();
+
+        //skip test if already completed.
+        if ($this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            $this->markTestSkipped('Skipping '.pathinfo(__FILE__, PATHINFO_FILENAME).' since its already completed......');
+            return;
+        }
     }
 
     public function testStripe()
     {
+        $this->logInfo('Testing stripe......');
         //make sure Stripe payment plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
@@ -40,6 +47,14 @@ class Stripe extends GD_Test
         $this->byId('cc-exp')->value('12 / 20');
         $this->byId('cc-csc')->value('333');
         $this->byId('submitButton')->click();
+    }
+
+    public function tearDown()
+    {
+        //write current file number to completed.txt
+        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+        fwrite($completed, $CurrentFileNumber);
     }
 }
 ?>

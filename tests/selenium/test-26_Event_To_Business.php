@@ -4,11 +4,18 @@ class EventToBusiness extends GD_Test
     public function setUp()
     {
         parent::setUp();
+
+        //skip test if already completed.
+        if ($this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            $this->markTestSkipped('Skipping '.pathinfo(__FILE__, PATHINFO_FILENAME).' since its already completed......');
+            return;
+        }
     }
 
     public function testEventToBusiness()
     {
         //make sure event manager plugin active
+        $this->logInfo('Testing events......');
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
         $is_active = $this->byId("geodirectory-events")->attribute('class');
@@ -73,6 +80,15 @@ class EventToBusiness extends GD_Test
         $this->byClassName('geodir_publish_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Thank you, your information has been successfully received"), "Not in success page");
+
+    }
+
+    public function tearDown()
+    {
+        //write current file number to completed.txt
+        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+        fwrite($completed, $CurrentFileNumber);
     }
 }
 ?>

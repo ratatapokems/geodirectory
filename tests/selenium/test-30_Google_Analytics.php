@@ -4,10 +4,17 @@ class GoogleAnalytics extends GD_Test
     public function setUp()
     {
         parent::setUp();
+
+        //skip test if already completed.
+        if ($this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            $this->markTestSkipped('Skipping '.pathinfo(__FILE__, PATHINFO_FILENAME).' since its already completed......');
+            return;
+        }
     }
 
     public function testGoogleAnalytics()
     {
+        $this->logInfo('Testing google analytics......');
         //make sure Google Analytics Authorized
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=general_settings');
         $this->waitForPageLoadAndCheckForErrors();
@@ -20,6 +27,14 @@ class GoogleAnalytics extends GD_Test
 
         $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/');
         $this->waitForPageLoadAndCheckForErrors();
+    }
+
+    public function tearDown()
+    {
+        //write current file number to completed.txt
+        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+        fwrite($completed, $CurrentFileNumber);
     }
 }
 ?>

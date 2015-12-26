@@ -38,21 +38,15 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         $elements = $this->elements($this->using('css selector')->value('.xdebug-error'));
         if ($elements) {
             $total = count($elements);
-            echo "\n";
-            echo $total.' errors found';
-            echo "\n";
+            fwrite(STDOUT, $total.' errors found'. PHP_EOL);
             $count = 0;
             foreach ($elements as $i => $element) {
                 $count++;
                 if ($errors = $element->attribute('innerHTML')) {
-                    echo "\n";
-                    echo "========================================================================";
-                    echo "\n";
-                    echo strip_tags($errors);
+                    fwrite(STDOUT, "========================================================================". PHP_EOL);
+                    fwrite(STDOUT, strip_tags($errors). PHP_EOL);
                     if ($count == $total) {
-                        echo "\n";
-                        echo "========================================================================";
-                        echo "\n";
+                        fwrite(STDOUT, "========================================================================". PHP_EOL);
                     }
                 }
             }
@@ -118,4 +112,37 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         $script = 'jQuery("#wpadminbar").hide();';
         $this->execute( array( 'script' => $script , 'args'=>array() ) );
     }
+
+    function logInfo($string) {
+        fwrite(STDOUT, "Info: ".$string . PHP_EOL);
+    }
+
+    function logError($string) {
+        fwrite(STDOUT, "Error: ".$string . PHP_EOL);
+    }
+
+    function logWarning($string) {
+        fwrite(STDOUT, "Warning: ".$string . PHP_EOL);
+    }
+
+    function getCurrentFileNumber($file) {
+        preg_match('/test-([0-9]+)_/', $file, $match);
+        return (int) $match[1];
+    }
+
+    function getCompletedFileNumber() {
+        $completed = fopen("tests/selenium/completed.txt", "r") or die("Unable to open file!");
+        $content = fgets($completed);
+        fclose($completed);
+        return (int) $content;
+    }
+
+    function skipTest($current, $completed) {
+        if ($completed == 42 || $current >= $completed) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
 }

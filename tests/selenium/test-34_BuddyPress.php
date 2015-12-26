@@ -4,10 +4,17 @@ class BuddyPress extends GD_Test
     public function setUp()
     {
         parent::setUp();
+
+        //skip test if already completed.
+        if ($this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            $this->markTestSkipped('Skipping '.pathinfo(__FILE__, PATHINFO_FILENAME).' since its already completed......');
+            return;
+        }
     }
 
     public function testBuddyPress()
     {
+        $this->logInfo('Testing buddypress......');
         //make sure BuddyPress core plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
@@ -124,6 +131,14 @@ class BuddyPress extends GD_Test
         $this->url(self::GDTEST_BASE_URL.'members/admin/listings/');
         $this->waitForPageLoadAndCheckForErrors();
 
+    }
+
+    public function tearDown()
+    {
+        //write current file number to completed.txt
+        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+        fwrite($completed, $CurrentFileNumber);
     }
 }
 ?>
