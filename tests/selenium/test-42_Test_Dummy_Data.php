@@ -20,7 +20,7 @@ class TestDummyData extends GD_Test
         $this->byLinkText('Dummy Data')->click();
 
         $html = $this->byId('sub_dummy_data_settings')->attribute('innerHTML');
-        if (strpos($html, 'Yes Delete Please!')) {
+        if (is_int(strpos($html, 'Yes Delete Please!'))) {
             //delete event data
         }
 
@@ -39,7 +39,7 @@ class TestDummyData extends GD_Test
         $this->byLinkText('Event Dummy Data')->click();
 
         $html = $this->byId('sub_gdevent_dummy_data_settings')->attribute('innerHTML');
-        if (strpos($html, 'Yes Delete Please!')) {
+        if (is_int(strpos($html, 'Yes Delete Please!'))) {
             //delete event data
         }
 
@@ -47,10 +47,12 @@ class TestDummyData extends GD_Test
 
     public function tearDown()
     {
-        //write current file number to completed.txt
-        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
-        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
-        fwrite($completed, $CurrentFileNumber);
+        if (!$this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            //write current file number to completed.txt
+            $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+            $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+            fwrite($completed, $CurrentFileNumber);
+        }
     }
 }
 ?>

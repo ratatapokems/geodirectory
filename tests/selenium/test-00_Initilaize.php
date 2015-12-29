@@ -279,22 +279,25 @@ class Initialize extends GD_Test
         $this->logInfo('Installing place dummy data......');
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byLinkText('Dummy Data')->click();
-        if ($this->isTextPresent("GeoDirectory sample data has been populated")) {
-            //delete old data
-            $this->byId('geodir_dummy_delete')->click();
+        //$this->byLinkText('Dummy Data')->click();
+        $this->byXPath("//dd[@id='dummy_data_settings']/a")->click();
+        $html = $this->byId('sub_dummy_data_settings')->attribute('innerHTML');
+        if (strpos($html, 'Yes Delete Please!')) {
+            //delete old place data
+            $this->byXPath("//div[@id='sub_dummy_data_settings']//a[@id='geodir_dummy_delete']")->click();
             $this->acceptAlert();
             $this->waitForPageLoadAndCheckForErrors();
         }
-        $this->select($this->byClassName('selected_sample_data'))->selectOptionByLabel('10');
-        $this->byId('geodir_dummy_insert')->click();
+        $this->select($this->byXPath("//div[@id='sub_dummy_data_settings']//select[@class='selected_sample_data']"))->selectOptionByLabel('10');
+        $this->byXPath("//div[@id='sub_dummy_data_settings']//a[@id='geodir_dummy_insert']")->click();
         $this->waitForPageLoadAndCheckForErrors(60000);
 
         //make sure dummy data installed
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byLinkText('Dummy Data')->click();
-        $this->assertTrue( $this->isTextPresent("GeoDirectory sample data has been populated"), "'GeoDirectory sample data has been populated' text not found");
+        $this->byXPath("//dd[@id='dummy_data_settings']/a")->click();
+        $html = $this->byId('sub_dummy_data_settings')->attribute('innerHTML');
+        $this->assertTrue( is_int(strpos($html, 'Yes Delete Please!')), "Places Demo data not installed correctly");
 
 
         //Activate Geodirectory Events
@@ -308,8 +311,9 @@ class Initialize extends GD_Test
         //install Events dummy data
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byLinkText('Event Dummy Data')->click();
-        if ($this->isTextPresent("GeoDirectory sample data has been populated")) {
+        $this->byXPath("//dd[@id='gdevent_dummy_data_settings']/a")->click();
+        $html = $this->byId('sub_gdevent_dummy_data_settings')->attribute('innerHTML');
+        if (strpos($html, 'Yes Delete Please!')) {
             //delete old data
             $this->byXPath("//div[@id='sub_gdevent_dummy_data_settings']//a[@id='geodir_dummy_delete']")->click();
             $this->acceptAlert();
@@ -322,7 +326,9 @@ class Initialize extends GD_Test
         //make sure Events dummy data installed
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=general_settings&active_tab=gdevent_dummy_data_settings');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->assertTrue( $this->isTextPresent("GeoDirectory sample data has been populated"), "'GeoDirectory sample data has been populated' text not found");
+        $this->byXPath("//dd[@id='gdevent_dummy_data_settings']/a")->click();
+        $html = $this->byId('sub_gdevent_dummy_data_settings')->attribute('innerHTML');
+        $this->assertTrue( is_int(strpos($html, 'Yes Delete Please!')), "Events Demo data not installed correctly");
 
         //set home page
         $this->logInfo('Setting home page......');
@@ -334,15 +340,52 @@ class Initialize extends GD_Test
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Settings saved"), "'Settings saved' text not found");
 
+        //Enable registration
+        $this->logInfo('Enabling registration......');
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/options-general.php');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId("users_can_register")->click();
+        $this->byId("submit")->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Settings saved"), "'Settings saved' text not found");
 
+
+        //create and assign menu
+        $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/nav-menus.php');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Give your menu a name above, then click Create Menu."), "'Create Menu' text not found");
+        $this->logInfo('Creating new menu......');
+        $this->byId('menu-name')->value('Primary');
+        $this->byId('save_menu_header')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/nav-menus.php');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Add menu items from the column on the left"), "'Add menu items from the column on the left' text not found");
+        $this->logInfo('Setting menu location......');
+        $this->byId('locations-main-nav')->click();
+        $this->byId('save_menu_header')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("<strong>Primary</strong> has been updated"), "'Primary has been updated' text not found");
+
+        // Assign menu
+        $this->logInfo('Assigning menu......');
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=design_settings&active_tab=geodir_navigation_settings');
+        $script = 'jQuery("#geodir_theme_location_nav").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->select($this->byId('geodir_theme_location_nav'))->selectOptionByLabel('The Main Menu');
+        $this->byName('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 
     public function tearDown()
     {
-        //write current file number to completed.txt
-        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
-        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
-        fwrite($completed, $CurrentFileNumber);
+        if (!$this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            //write current file number to completed.txt
+            $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+            $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+            fwrite($completed, $CurrentFileNumber);
+        }
     }
 
 }

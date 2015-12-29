@@ -18,8 +18,8 @@ class AddListing extends GD_Test
         $this->url(self::GDTEST_BASE_URL.'add-listing/?listing_type=gd_place');
         $this->waitForPageLoadAndCheckForErrors();
         if ($this->isTextPresent("Sign In")) {
-            $this->byId('user_login')->value('test@test.com');
-            $this->byId('user_pass')->value('12345');
+            $this->byId('user_login')->value('testuser@test.com');
+            $this->byId('user_pass')->value('1');
             $this->byId('rememberme')->click();
             // Submit the form
             $this->byId('cus_loginform')->submit();
@@ -30,7 +30,8 @@ class AddListing extends GD_Test
         $this->byId('post_title')->value('Test Listing');
         $this->byId('post_desc')->value('Test Desc');
         $this->byId('post_tags')->value('tag1,tag2');
-        $this->byId('post_address')->value('350 Fifth Avenue');
+        $this->byId('post_address')->value('wall street');
+        $this->waitForPageLoadAndCheckForErrors();
         $this->byId('post_set_address_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_timing')->value('10.00 am to 6 pm every day');
@@ -53,10 +54,12 @@ class AddListing extends GD_Test
 
     public function tearDown()
     {
-        //write current file number to completed.txt
-        $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
-        $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
-        fwrite($completed, $CurrentFileNumber);
+        if (!$this->skipTest($this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME)), $this->getCompletedFileNumber())) {
+            //write current file number to completed.txt
+            $CurrentFileNumber = $this->getCurrentFileNumber(pathinfo(__FILE__, PATHINFO_FILENAME));
+            $completed = fopen("tests/selenium/completed.txt", "w") or die("Unable to open file!");
+            fwrite($completed, $CurrentFileNumber);
+        }
     }
 }
 ?>

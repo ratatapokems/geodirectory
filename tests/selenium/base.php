@@ -138,10 +138,12 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
     }
 
     function skipTest($current, $completed) {
-        if ($completed == 42 || $current >= $completed) {
+        if ($completed == 42 || $current == $completed) {
             return false;
-        } else {
+        } elseif ($current < $completed) {
             return true;
+        } else {
+            return false;
         }
     }
 
