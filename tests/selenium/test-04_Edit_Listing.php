@@ -15,21 +15,22 @@ class EditListing extends GD_Test
     public function testEditListing()
     {
         $this->logInfo('Editing GD Place listing as user......');
-        $this->maybeUserLogin(self::GDTEST_BASE_URL.'author/test/?geodir_dashbord=true&stype=gd_place', true);
-        $this->assertTrue( $this->isTextPresent("Places By"), "Places By text not found");
+        $this->maybeUserLogin(self::GDTEST_BASE_URL.'author/test-user/?geodir_dashbord=true&stype=gd_place', true);
+        $this->assertTrue( $this->isTextPresent("Places by"), "'Places by' text not found");
         $this->byClassName('geodir-edit')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Edit Place"), "Edit Place text not found");
         $this->byId('post_desc')->value('Test Desc modified');
         $this->byId('geodir_accept_term_condition')->click();
         // Submit the form
-        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
+        $this->byXPath("//div[@id='geodir-add-listing-submit']//input[@type='submit']")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("This is a preview of your listing"), "Not in preview page.");
         // Submit the form
         $this->byClassName('geodir_publish_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Thank you, your information has been successfully received"), "Not in success page");
+        $this->maybeLogout();
     }
 
     public function testEditAdminListing()
@@ -37,7 +38,7 @@ class EditListing extends GD_Test
         $this->logInfo('Editing GD Place listing as admin......');
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/edit.php?post_type=gd_place');
         $this->assertTrue( $this->isTextPresent("post-type-gd_place"), "Not in Places post type");
-        $this->byClassName('edit')->click();
+        $this->byLinkText("Test Listing")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Edit Place"), "Edit Place text not found");
         $this->byId('title')->value('Test Listing modified');

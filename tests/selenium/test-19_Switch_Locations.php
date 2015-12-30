@@ -18,11 +18,23 @@ class SwitchLocations extends GD_Test
         //make sure multi locations plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-location-manager")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "Location Manager plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Location Manager
+            $this->logInfo('Activating Location manager......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-location-manager']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-location-manager")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Location Manager plugin not active");
+
 
         //Make sure Show location switcher in menu checked.
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_setting');

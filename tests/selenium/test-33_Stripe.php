@@ -18,11 +18,23 @@ class Stripe extends GD_Test
         //make sure Stripe payment plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("stripe-payment-geodirectory-add-on")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "Stripe payment plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory stripe payment geodirectory add on
+            $this->logInfo('Activating stripe payment geodirectory add on......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='stripe-payment-geodirectory-add-on']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("stripe-payment-geodirectory-add-on")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "stripe payment geodirectory add on plugin not active");
+
 
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=paymentmanager_fields&subtab=geodir_payment_options');
         $this->waitForPageLoadAndCheckForErrors();

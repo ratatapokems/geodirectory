@@ -18,11 +18,23 @@ class SortReview extends GD_Test
         //make sure advance search filters plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-review-rating-manager")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "Review Rating Manager plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Review Rating Manager
+            $this->logInfo('Activating Review Rating manager......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-review-rating-manager']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-review-rating-manager")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Review Rating Manager plugin not active");
+
         //Make sure Enable comment list sorting checked.
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=multirating_fields&subtab=geodir_multirating_options');
         $this->waitForPageLoadAndCheckForErrors();

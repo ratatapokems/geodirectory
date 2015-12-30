@@ -14,6 +14,15 @@ class SortListing extends GD_Test
 
     public function testSortListing()
     {
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gt-text')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+        $link = $this->byXPath("//li[@id='licontainer_new9']/div[contains(@class,'titlenew9')]");
+        $this->moveto($link);
+        $this->doubleclick();
+
         $this->logInfo('Testing list sorting......');
         //Make sure sorting options available
         $this->url(self::GDTEST_BASE_URL.'places/');

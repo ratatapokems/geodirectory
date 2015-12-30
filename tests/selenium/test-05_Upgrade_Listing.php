@@ -19,10 +19,21 @@ class UpgradeListing extends GD_Test
         $this->waitForPageLoadAndCheckForErrors();
         //check payment manager plugin active
         $is_active = $this->byId("geodirectory-payment-manager")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "Payment Manager plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory payment manager
+            $this->logInfo('Activating payment manager......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-payment-manager']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-payment-manager")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Payment Manager plugin not active");
+
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=paymentmanager_fields&subtab=geodir_payment_manager');
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Geo Directory Manage Price"), "Not in manage price page");
@@ -42,12 +53,12 @@ class UpgradeListing extends GD_Test
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('geodir-upgrade')->click();
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byCssSelector('css=#geodir_price_package_8 > input[name="package_id"]')->click();
+        $this->byXPath("(//div[@class='geodir_package']/input[@type='radio'])[2]")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_accept_term_condition')->click();
-        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
+        $this->byXPath("//div[@id='geodir-add-listing-submit']//input[@type='submit']")->click();
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byCssSelector('css=input[name="Submit and Pay"]')->click();
+        $this->byXPath("//input[@name='Submit and Pay']")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gd_pmethod_prebanktransfer')->click();
         $this->byId('gd_checkout_paynow')->click();

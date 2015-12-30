@@ -17,7 +17,7 @@ class Register extends GD_Test
         $this->logInfo('Registering new user......');
         $this->url(self::GDTEST_BASE_URL.'gd-login/?signup=1');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->assertTrue( $this->isTextPresent("Sign Up Now"), "No text found");
+        $this->assertTrue( $this->isTextPresent("Sign Up Now"), "'Sign Up Now' text found");
         $this->byId('user_email')->value('testuser@test.com');
         $this->byId('user_fname')->value('Test User');
         // Submit the form
@@ -36,7 +36,7 @@ class Register extends GD_Test
         $user_id = $this->byXPath("//*[text()[contains(.,'testuser@test.com')]]/ancestor::tr")->attribute('id');
         $user_id = str_replace('user-', '', $user_id);
         $this->url(self::GDTEST_BASE_URL.'wp-admin/user-edit.php?user_id='.$user_id);
-        $this->select($this->byId("role"))->selectOptionByLabel('Administrator');
+//        $this->select($this->byId("role"))->selectOptionByLabel('Administrator');
         $this->byClassName('wp-generate-pw')->click();
         $this->waitForPageLoadAndCheckForErrors(5000);
         $this->byId('pass1-text')->value('1');

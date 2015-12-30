@@ -17,8 +17,9 @@ class SearchWithKeyword extends GD_Test
         $this->logInfo('Searching with keyword......');
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byClassName('search_text')->value('Test');
-        $this->byClassName('geodir_submit_search')->click();
+//        $this->byClassName('search_text')->value('Test');
+//        $this->byClassName('geodir_submit_search')->click();
+        $this->url(self::GDTEST_BASE_URL.'?geodir_search=1&stype=gd_place&s=test&snear=&sgeo_lat=&sgeo_lon=');
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Search Places For"), "Not in search results page");
     }

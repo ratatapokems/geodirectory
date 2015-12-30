@@ -18,11 +18,22 @@ class LocationlessCPT extends GD_Test
         //make sure custom post types plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-custom-post-types")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "custom post types plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Custom Post Types
+            $this->logInfo('Activating Custom Post Types......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-custom-post-types']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-custom-post-types")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Custom Post Types plugin not active");
 
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=geodir_manage_custom_posts');
         $this->waitForPageLoadAndCheckForErrors();

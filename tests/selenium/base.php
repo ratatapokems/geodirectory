@@ -57,8 +57,8 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         if ($force) {
             $this->url(self::GDTEST_BASE_URL.'wp-admin/');
             if ($this->isTextPresent("forgetmenot")) {
-                $this->byId('user_login')->value('test@test.com');
-                $this->byId('user_pass')->value('12345');
+                $this->byId('user_login')->value('testuser@test.com');
+                $this->byId('user_pass')->value('1');
                 $this->byId('rememberme')->click();
                 // Submit the form
                 $this->byId('wp-submit')->submit();
@@ -68,8 +68,8 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         $this->url($redirect);
         $this->waitForPageLoadAndCheckForErrors();
         if ($this->isTextPresent("Sign In")) {
-            $this->byId('user_login')->value('test@test.com');
-            $this->byId('user_pass')->value('12345');
+            $this->byId('user_login')->value('testuser@test.com');
+            $this->byId('user_pass')->value('1');
             $this->byId('rememberme')->click();
             // Submit the form
             $this->byId('cus_loginform')->submit();
@@ -94,7 +94,7 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
 
     function isElementExists($id = false) {
         if (!$id) {
-            return;
+            return false;
         }
         $exists = true;
         try {
@@ -138,13 +138,19 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
     }
 
     function skipTest($current, $completed) {
-        if ($completed == 42 || $current == $completed) {
+        if ($completed == 0 || $completed == 42 || $current == $completed) {
             return false;
         } elseif ($current < $completed) {
             return true;
         } else {
             return false;
         }
+    }
+
+    function maybeLogout() {
+        $this->url(self::GDTEST_BASE_URL);
+        $this->byXPath("//*[@id='gd-sidebar-wrapper']//ul[@class='geodir-loginbox-list']//a[@class='signin']")->click();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 
 }

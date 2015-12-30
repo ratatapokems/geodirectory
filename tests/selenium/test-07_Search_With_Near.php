@@ -17,10 +17,11 @@ class SearchWithNear extends GD_Test
         $this->logInfo('Searching with near......');
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byClassName('snear')->value('New York');
-        $this->byClassName('geodir_submit_search')->click();
+//        $this->byClassName('snear')->value('New York');
+//        $this->byClassName('geodir_submit_search')->click();
+        $this->url(self::GDTEST_BASE_URL.'?geodir_search=1&stype=gd_place&s=+&snear=New+York&sgeo_lat=40.7127837&sgeo_lon=-74.00594130000002');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->assertTrue( $this->isTextPresent("Search Places For"), "Not in search results page");
+        $this->assertTrue( $this->isTextPresent("Search Places"), "Not in search results page");
     }
 
     public function tearDown()

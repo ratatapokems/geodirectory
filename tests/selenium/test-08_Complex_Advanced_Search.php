@@ -18,11 +18,46 @@ class ComplexAdvancedSearch extends GD_Test
         //make sure advance search filters plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-advance-search-filters")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "Advance Search Filters plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Advance Search Filters
+            $this->logInfo('Activating Advance Search Filters......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-advance-search-filters']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-advance-search-filters")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Advance Search Filters plugin not active");
+
+        //Add search fields
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
+        $script = 'jQuery("#field_frm1").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->byId('cat_filter')->click();
+        $this->byId('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=advance_search&listing_type=gd_place');
+        $this->byId('gt-gd_placecategory')->click();
+        $this->waitForPageLoadAndCheckForErrors(2000);
+        $link = $this->byXPath("//li[@id='licontainer_dist']/div[contains(@class,'titledist')]");
+        $this->moveto($link);
+        $this->doubleclick();
+
+//        $this->byXPath("//li[@id='licontainer_dist']/div[contains(@class,'titledist')]")->click();
+//        $script = 'jQuery("#field_frmgd_placecategory").show();';
+//        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->byId('front_search_title')->value('Category');
+        $this->byId('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('search_text')->value('Test');

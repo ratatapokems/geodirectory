@@ -18,11 +18,23 @@ class EventToBusiness extends GD_Test
         $this->logInfo('Testing events......');
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-events")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "event manager plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Events
+            $this->logInfo('Activating Events......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-events']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-events")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Events plugin not active");
+
 
         // Event post type -> Allow post type to add from frontend
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=design_settings');

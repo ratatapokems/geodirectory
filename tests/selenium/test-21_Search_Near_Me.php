@@ -18,11 +18,22 @@ class SearchNearMe extends GD_Test
         //make sure event manager plugin active
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         $this->waitForPageLoadAndCheckForErrors();
+
         $is_active = $this->byId("geodirectory-advance-search-filters")->attribute('class');
-        $this->assertFalse( strpos($is_active, 'inactive'), "GeoDirectory Advance Search Filters plugin not active");
-        if (strpos($is_active, 'inactive')) {
-            return;
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Advance Search Filters
+            $this->logInfo('Activating Advance Search Filters......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-advance-search-filters']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
+
+        $is_active1 = $this->byId("geodirectory-advance-search-filters")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Advance Search Filters plugin not active");
 
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();

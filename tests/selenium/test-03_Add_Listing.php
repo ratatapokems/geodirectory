@@ -30,8 +30,12 @@ class AddListing extends GD_Test
         $this->byId('post_title')->value('Test Listing');
         $this->byId('post_desc')->value('Test Desc');
         $this->byId('post_tags')->value('tag1,tag2');
+        $script = 'jQuery("select#gd_placecategory").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->select($this->byXPath("//select[@id='gd_placecategory']"))->selectOptionByLabel('Attractions');
+        $this->waitForPageLoadAndCheckForErrors(2000);
         $this->byId('post_address')->value('wall street');
-        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('post_address')->value('10006');
         $this->byId('post_set_address_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_timing')->value('10.00 am to 6 pm every day');
@@ -43,7 +47,7 @@ class AddListing extends GD_Test
         $this->byId('geodir_special_offers')->value('Test Offer');
         $this->byId('geodir_accept_term_condition')->click();
         // Submit the form
-        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
+        $this->byXPath("//div[@id='geodir-add-listing-submit']//input[@type='submit']")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("This is a preview of your listing"), "Not in preview page.");
         // Submit the form
