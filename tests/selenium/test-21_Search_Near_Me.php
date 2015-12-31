@@ -37,9 +37,11 @@ class SearchNearMe extends GD_Test
 
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byClassName('near-compass')->click();
+        $script = "jQuery('.near-compass').trigger('click');";
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('gt_near_me_s')->click();
+        $this->acceptAlert();
         $this->byClassName('geodir_submit_search')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Search Places For"), "Not in search results page");

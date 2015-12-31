@@ -15,9 +15,10 @@ class DeleteListing extends GD_Test
     public function testDeleteListing()
     {
         $this->logInfo('Delete Listing......');
-        $this->url(self::GDTEST_BASE_URL.'author/admin/?geodir_dashbord=true&stype=gd_place');
+        $this->maybeUserLogin(self::GDTEST_BASE_URL.'author/test-user/?geodir_dashbord=true&stype=gd_place', true);
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('geodir-delete')->click();
+        $this->acceptAlert();
         $this->waitForPageLoadAndCheckForErrors();
     }
 

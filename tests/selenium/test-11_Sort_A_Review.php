@@ -44,7 +44,7 @@ class SortReview extends GD_Test
             $this->byName('save')->click();
             $this->waitForPageLoadAndCheckForErrors();
         }
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/?comment_sorting=high_rating');
+        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/?comment_sorting=high_rating');
         $this->waitForPageLoadAndCheckForErrors();
     }
 

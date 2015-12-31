@@ -28,7 +28,7 @@ class CheckMaps extends GD_Test
 
         //detail map
         $this->logInfo('Checking detail map......');
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/');
+        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/franklin-square/');
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("geodir-map-detail-page"), "Detail page map not found");
     }

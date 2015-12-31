@@ -14,7 +14,7 @@ class SortListing extends GD_Test
 
     public function testSortListing()
     {
-        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
+        $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gt-text')->click();
         $this->waitForPageLoadAndCheckForErrors();
@@ -22,6 +22,18 @@ class SortListing extends GD_Test
         $link = $this->byXPath("//li[@id='licontainer_new9']/div[contains(@class,'titlenew9')]");
         $this->moveto($link);
         $this->doubleclick();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('admin_title')->value('Price');
+        $this->byId('site_title')->value('Price');
+        $this->byId('htmlvar_name')->value('price');
+        $this->byId('clabels')->value('Price');
+        $this->select($this->byId("is_active"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("show_on_listing"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("show_on_detail"))->selectOptionByLabel('Yes');
+        $this->byId('cat_sort')->click();
+        $this->byId('cat_filter')->click();
+        $this->byId('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
 
         $this->logInfo('Testing list sorting......');
         //Make sure sorting options available

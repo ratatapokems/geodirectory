@@ -15,7 +15,7 @@ class SendEnquiry extends GD_Test
     public function testSendEnquiry()
     {
         $this->logInfo('Send Enquiry......');
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/?comment_sorting=high_rating');
+        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('b_send_inquiry')->click();
         $this->waitForPageLoadAndCheckForErrors();

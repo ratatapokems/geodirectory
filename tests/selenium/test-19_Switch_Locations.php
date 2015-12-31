@@ -50,9 +50,41 @@ class SwitchLocations extends GD_Test
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=design_settings');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byLinkText('Navigation')->click();
-        //find a way to select menu
+        $script = 'jQuery("#geodir_theme_location_nav").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->select($this->byId('geodir_theme_location_nav'))->selectOptionByLabel('The Main Menu');
         $this->byName('save')->click();
         $this->waitForPageLoadAndCheckForErrors();
+
+        //Add new location
+        //make sure multi locations plugin active
+        $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+        $this->waitForPageLoadAndCheckForErrors();
+
+        $is_active = $this->byId("geodirectory-location-manager")->attribute('class');
+        if (is_int(strpos($is_active, 'inactive'))) {
+            //Activate Geodirectory Location Manager
+            $this->logInfo('Activating Location manager......');
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+            $this->waitForPageLoadAndCheckForErrors();
+            $this->hideAdminBar();
+            $this->byXPath("//tr[@id='geodirectory-location-manager']//span[@class='activate']/a")->click();
+            $this->waitForPageLoadAndCheckForErrors(20000);
+            //go back to plugin page
+            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+        }
+
+        $is_active1 = $this->byId("geodirectory-location-manager")->attribute('class');
+        $this->assertFalse( strpos($is_active1, 'inactive'), "Location Manager plugin not active");
+
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('las vegas');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
 
         //front end switch locations
         //find a way to click the elements

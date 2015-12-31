@@ -35,7 +35,33 @@ class ClaimAListing extends GD_Test
         $is_active1 = $this->byId("geodirectory-claim-manager")->attribute('class');
         $this->assertFalse( strpos($is_active1, 'inactive'), "Claim Manager plugin not active");
 
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/');
+        //Configure claim manager
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=claimlisting_fields&subtab=geodir_claim_options');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->hideAdminBar();
+        $script = 'jQuery("select#geodir_claim_enable").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $script = 'jQuery("select#geodir_claim_auto_approve").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $script = 'jQuery("select#geodir_claim_show_owner_varified").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $script = 'jQuery("select#geodir_claim_show_author_link").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $script = 'jQuery("select#geodir_post_types_claim_listing").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $script = 'jQuery("select#geodir_claim_force_upgrade").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+
+        $this->select($this->byId("geodir_claim_enable"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("geodir_claim_auto_approve"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("geodir_claim_show_owner_varified"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("geodir_claim_show_author_link"))->selectOptionByLabel('Yes');
+        $this->select($this->byId("geodir_post_types_claim_listing"))->selectOptionByLabel('Place');
+        $this->select($this->byId("geodir_claim_force_upgrade"))->selectOptionByLabel('No');
+        $this->byName('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('geodir_claim_enable')->click();
         $this->waitForPageLoadAndCheckForErrors();

@@ -19,7 +19,9 @@ class AddCustomFields extends GD_Test
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gt-text')->click();
-        $this->byId('licontainer_new10')->click();
+        $link = $this->byXPath("//li[@id='licontainer_new10']/div[contains(@class,'titlenew10')]");
+        $this->moveto($link);
+        $this->doubleclick();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('admin_title')->value('Text Field');
         $this->byId('site_title')->value('Text Field');
@@ -37,7 +39,9 @@ class AddCustomFields extends GD_Test
         $this->maybeAdminLogin(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('gt-text')->click();
-        $this->byId('licontainer_new11')->click();
+        $link = $this->byXPath("//li[@id='licontainer_new11']/div[contains(@class,'titlenew11')]");
+        $this->moveto($link);
+        $this->doubleclick();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('admin_title')->value('Text Field 2');
         $this->byId('site_title')->value('Text Field 2');

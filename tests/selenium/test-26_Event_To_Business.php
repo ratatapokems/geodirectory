@@ -65,15 +65,23 @@ class EventToBusiness extends GD_Test
         $this->byId('all_day')->click();
 
 
-        if ($this->isTextPresent("geodir_claimed_row")) {
-            $elements = $this->elements($this->using('name')->value('claimed'));
-            $elements[0]->click();
+        if ($this->isTextPresent("Business Owner/Associate")) {
+//            $elements = $this->elements($this->using('name')->value('claimed'));
+//            $elements[0]->click();
+//            $this->byXPath("//input[contains(@name,'claimed') and contains(@value,'0')]")->click();
+            $script = 'jQuery("#geodir_claimed_row input:radio:first").prop("checked", true).trigger("click");';
+            $this->execute( array( 'script' => $script , 'args'=>array() ) );
         }
 
         $this->byId('post_title')->value('Test Event');
         $this->byId('post_desc')->value('Test Desc');
         $this->byId('post_tags')->value('tag1,tag2');
-        $this->byId('post_address')->value('350 Fifth Avenue');
+        $script = 'jQuery("select#gd_eventcategory").show();';
+        $this->execute( array( 'script' => $script , 'args'=>array() ) );
+        $this->select($this->byXPath("//select[@id='gd_eventcategory']"))->selectOptionByLabel('Events');
+        $this->waitForPageLoadAndCheckForErrors(2000);
+        $this->byId('post_address')->value('wall street');
+        $this->byId('post_address')->value('10006');
         $this->byId('post_set_address_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_timing')->value('10.00 am to 6 pm every day');
@@ -85,7 +93,7 @@ class EventToBusiness extends GD_Test
         $this->byId('geodir_special_offers')->value('Test Offer');
         $this->byId('geodir_accept_term_condition')->click();
         // Submit the form
-        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
+        $this->byXPath("//div[@id='geodir-add-listing-submit']//input[@type='submit']")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("This is a preview of your listing"), "Not in preview page.");
         // Submit the form
