@@ -56,6 +56,7 @@ class BuddyPress extends GD_Test
         //Make sure "Use BuddyPress registration form" checked.
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=geodir_buddypress&subtab=gdbuddypress_settings');
         $this->waitForPageLoadAndCheckForErrors();
+        $this->prepareSession()->currentWindow()->maximize();
 
         $to_save = false;
         $is_checked_1 = $this->byId('geodir_buddypress_bp_register')->attribute('checked');

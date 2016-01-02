@@ -25,7 +25,7 @@ class GoogleAnalytics extends GD_Test
             echo "Google Analytics not configured";
         }
 
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/restaurants/buddakan/');
+        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/franklin-square/');
         $this->waitForPageLoadAndCheckForErrors();
     }
 

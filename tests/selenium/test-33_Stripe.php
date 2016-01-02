@@ -44,10 +44,10 @@ class Stripe extends GD_Test
         $this->waitForPageLoadAndCheckForErrors();
         $this->byClassName('geodir-upgrade')->click();
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byCssSelector('css=#geodir_price_package_8 > input[name="package_id"]')->click();
+        $this->byXPath("(//div[@class='geodir_package']/input[@type='radio'])[2]")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_accept_term_condition')->click();
-        $this->byCssSelector('css=#geodir-add-listing-submit > input.geodir_button')->click();
+        $this->byXPath("//div[@id='geodir-add-listing-submit']//input[@type='submit']")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byCssSelector('css=input[name="Submit and Pay"]')->click();
         $this->waitForPageLoadAndCheckForErrors();
@@ -59,6 +59,7 @@ class Stripe extends GD_Test
         $this->byId('cc-exp')->value('12 / 20');
         $this->byId('cc-csc')->value('333');
         $this->byId('submitButton')->click();
+        $this->waitForPageLoadAndCheckForErrors();
     }
 
     public function tearDown()

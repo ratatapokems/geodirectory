@@ -37,7 +37,10 @@ class NewLocation extends GD_Test
 
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byId('gd_city')->value('las vegas');
+        $this->prepareSession()->currentWindow()->maximize();
+        $this->byId('gd_city')->value('Las Vegas');
+        $this->byId('gd_region')->value('Nevada');
+        $this->waitForPageLoadAndCheckForErrors();
 //        $this->byId('gd_city')->value('texas');
         $this->byId('gd_set_address_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
