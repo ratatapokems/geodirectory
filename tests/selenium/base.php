@@ -92,13 +92,18 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         }
     }
 
-    function isElementExists($id = false) {
+    function isElementExists($id = false, $by = 'id') {
         if (!$id) {
             return false;
         }
         $exists = true;
         try {
-            $this->byId($id);
+            if ($by == 'id') {
+                $this->byId($id);
+            } elseif ($by == 'xpath') {
+                $this->byXPath($id);
+            }
+
         } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {
             if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement == $e->getCode()) {
                 $exists = false;

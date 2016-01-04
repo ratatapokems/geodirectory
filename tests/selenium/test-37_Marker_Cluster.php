@@ -41,8 +41,10 @@ class MarkerCluster extends GD_Test
         $this->byName('save')->click();
         $this->waitForPageLoadAndCheckForErrors();
 
-        $this->maybeAdminLogin(self::GDTEST_BASE_URL);
-        //todo: Find a way to check cluster count exists on page
+        $this->maybeAdminLogin(self::GDTEST_BASE_URL.'location/');
+        if (!$this->isElementExists('//div[text()=2]', 'xpath')) {
+            $this->logError('Marker cluster not found in home page.');
+        }
     }
 
     public function tearDown()

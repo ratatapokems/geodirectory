@@ -37,33 +37,52 @@ class ComplexAdvancedSearch extends GD_Test
 
         //Add search fields
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=custom_fields&listing_type=gd_place');
-        $script = 'jQuery("#field_frm1").show();';
-        $this->execute( array( 'script' => $script , 'args'=>array() ) );
-        $this->byId('cat_filter')->click();
-        $this->byId('save')->click();
+//        $script = 'jQuery("#field_frm1").show();';
+//        $this->execute( array( 'script' => $script , 'args'=>array() ) );
         $this->waitForPageLoadAndCheckForErrors();
-
-        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=advance_search&listing_type=gd_place');
-        $this->byId('gt-gd_placecategory')->click();
-        $this->waitForPageLoadAndCheckForErrors(2000);
-        $link = $this->byXPath("//li[@id='licontainer_dist']/div[contains(@class,'titledist')]");
+        $this->hideAdminBar();
+        $link = $this->byId('licontainer_1');
         $this->moveto($link);
         $this->doubleclick();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byXPath("//div[@id='field_frm1']//input[@id='cat_filter']")->click();
+        $this->byXPath("//div[@id='field_frm1']//input[@id='save']")->click();
+//        $this->byId('save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+        //category
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=gd_place_fields_settings&subtab=advance_search&listing_type=gd_place');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->hideAdminBar();
+        $this->byId('gt-gd_placecategory')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $link = $this->byId('licontainer_gd_placecategory');
+        $this->moveto($link);
+        $this->doubleclick();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byXPath("//div[@id='field_frmgd_placecategory']//input[@id='front_search_title']")->value('Category');
+        $this->byXPath("//div[@id='field_frmgd_placecategory']//input[@id='save']")->click();
+        $this->waitForPageLoadAndCheckForErrors();
+
+//        $link = $this->byXPath("//li[@id='licontainer_dist']/div[contains(@class,'titledist')]");
+//        $this->moveto($link);
+//        $this->doubleclick();
 
 //        $this->byXPath("//li[@id='licontainer_dist']/div[contains(@class,'titledist')]")->click();
 //        $script = 'jQuery("#field_frmgd_placecategory").show();';
 //        $this->execute( array( 'script' => $script , 'args'=>array() ) );
-        $this->byId('front_search_title')->value('Category');
-        $this->byId('save')->click();
-        $this->waitForPageLoadAndCheckForErrors();
+//        $this->byId('front_search_title')->value('Category');
+//        $this->byId('save')->click();
+//        $this->waitForPageLoadAndCheckForErrors();
 
 
         $this->url(self::GDTEST_BASE_URL);
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byClassName('search_text')->value('Test');
-        $this->byClassName('showFilters')->click();
-        $this->byName('sgd_placecategory[]')->value("2");
-        $this->byClassName('geodir_submit_search')->click();
+        $this->byXPath("//section[contains(@class,'geodir_advance_search_widget')]//input[@name='s']")->value('Test');
+        $this->byXPath("//section[contains(@class,'geodir_advance_search_widget')]//input[@class='showFilters']")->click();
+        $this->select($this->byXPath("//section[contains(@class,'geodir_advance_search_widget')]//select[@class='cat_select']"))->selectOptionByLabel('Attractions');
+//        $this->byName('sgd_placecategory[]')->value("2");
+        $this->byXPath("(//section[contains(@class,'geodir_advance_search_widget')]//input[@class='geodir_submit_search'])[2]")->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Search Places For"), "Not in search results page");
     }

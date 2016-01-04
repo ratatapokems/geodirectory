@@ -15,7 +15,7 @@ class AddReview extends GD_Test
     public function testAddReview()
     {
         $this->logInfo('Adding a review......');
-        $this->url(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/');
+        $this->maybeUserLogin(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byLinkText('Reviews')->click();
         //Todo: find a way to rate the stars

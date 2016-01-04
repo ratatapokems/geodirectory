@@ -87,7 +87,13 @@ class SwitchLocations extends GD_Test
         $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
 
         //front end switch locations
-        //find a way to click the elements
+        $this->url(self::GDTEST_BASE_URL.'location/united-states/nevada/las-vegas/');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Las Vegas"), "'Las Vegas' text not found");
+
+        $this->url(self::GDTEST_BASE_URL.'location/united-states/new-york/new-york/');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("New York"), "'New York' text not found");
     }
 
     public function tearDown()

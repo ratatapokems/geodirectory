@@ -23,16 +23,16 @@ class AddCustomFields extends GD_Test
         $this->moveto($link);
         $this->doubleclick();
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byId('admin_title')->value('Text Field');
-        $this->byId('site_title')->value('Text Field');
-        $this->byId('admin_desc')->value('Text Field');
-        $this->byId('htmlvar_name')->value('text_field');
-        $this->byId('clabels')->value('Text Field');
-        $this->select($this->byId('is_default'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('is_active'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('show_on_listing'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('show_on_detail'))->selectOptionByLabel('Yes');
-        $this->byId('save')->click();
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='admin_title']")->value('Text Field 1');
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='site_title']")->value('Text Field 1');
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='htmlvar_name']")->value('text_field_1');
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='clabels']")->value('Text Field 1');
+        $this->select($this->byXPath("//div[@id='field_frmnew10']//select[@id='is_active']"))->selectOptionByLabel('Yes');
+        $this->select($this->byXPath("//div[@id='field_frmnew10']//select[@id='show_on_listing']"))->selectOptionByLabel('Yes');
+        $this->select($this->byXPath("//div[@id='field_frmnew10']//select[@id='show_on_detail']"))->selectOptionByLabel('Yes');
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='cat_sort']")->click();
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='cat_filter']")->click();
+        $this->byXPath("//div[@id='field_frmnew10']//input[@id='save']")->click();
         $this->waitForPageLoadAndCheckForErrors();
 
         //Field 2
@@ -43,16 +43,16 @@ class AddCustomFields extends GD_Test
         $this->moveto($link);
         $this->doubleclick();
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byId('admin_title')->value('Text Field 2');
-        $this->byId('site_title')->value('Text Field 2');
-        $this->byId('admin_desc')->value('Text Field 2');
-        $this->byId('htmlvar_name')->value('text_field_2');
-        $this->byId('clabels')->value('Text Field 2');
-        $this->select($this->byId('is_default'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('is_active'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('show_on_listing'))->selectOptionByLabel('Yes');
-        $this->select($this->byId('show_on_detail'))->selectOptionByLabel('Yes');
-        $this->byId('save')->click();
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='admin_title']")->value('Text Field 2');
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='site_title']")->value('Text Field 2');
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='htmlvar_name']")->value('text_field_2');
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='clabels']")->value('Text Field 2');
+        $this->select($this->byXPath("//div[@id='field_frmnew11']//select[@id='is_active']"))->selectOptionByLabel('Yes');
+        $this->select($this->byXPath("//div[@id='field_frmnew11']//select[@id='show_on_listing']"))->selectOptionByLabel('Yes');
+        $this->select($this->byXPath("//div[@id='field_frmnew11']//select[@id='show_on_detail']"))->selectOptionByLabel('Yes');
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='cat_sort']")->click();
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='cat_filter']")->click();
+        $this->byXPath("//div[@id='field_frmnew11']//input[@id='save']")->click();
         $this->waitForPageLoadAndCheckForErrors();
     }
 

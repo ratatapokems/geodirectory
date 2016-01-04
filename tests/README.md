@@ -25,3 +25,29 @@
 7. Finally cd to geodirectory folder again and then run this command.
     1. phpunit 
     2. If everything setup correctly, you will see unit test results in terminal
+    
+    
+## Steps to run selenium tests ##
+1. Install Firefox browser
+2. Download and Install [Selenium Standalone Server](http://www.seleniumhq.org/download/).
+    1. Start selenium server
+    2. On Mac OSX, I use this command to start the server
+        1. java -jar /usr/local/bin/selenium-server-standalone-2.48.2.jar 
+3. Create a dummy site for testing purpose. 
+    1. Test site should point to http://localhost/wordpress/
+    2. If you are planning to use different base url, change the GDTEST_BASE_URL constant value in selenium/base.php
+    3. Use admin/admin for username/password 
+    4. Warning: Don't use a real site since the test will be resetting the database often. 
+4. Copy selenium/initialize.py to dummy site's wp-content/plugins folder
+5. Run initialize.py with the following command
+    1. python initialize.py [github username] [bitbucket username] 
+    2. Ex: python initialize.py GeoDirectory GeoDirectory
+6. Enter the password in terminal. All plugins will be installed.
+    1. Don't activate any plugins. Plugins will be activated automatically by the script.
+7. Change the directory to themes folder and then install GDF theme.
+    1. Don't activate the theme. It will be activated automatically by the script.
+8. cd to geodirectory root folder. In my case its /Users/giri/Sites/whoop/wp-content/plugins/geodirectory 
+9. Execute this command vendor/bin/phpunit --debug 
+10. selenium/completed.txt keeping the file number of last completed test. 
+   So if completed.txt contains number 10, then previous 9 tests will be skipped. 
+   Please reset this number to 0, if you want to start the test from the beginning.   
