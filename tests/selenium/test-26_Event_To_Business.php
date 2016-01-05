@@ -22,12 +22,7 @@ class EventToBusiness extends GD_Test
         $is_active = $this->byId("geodirectory-events")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory Events
-            $this->logInfo('Activating Events......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-events']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-events", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }

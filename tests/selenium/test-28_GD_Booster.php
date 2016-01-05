@@ -23,12 +23,7 @@ class GDBooster extends GD_Test
         $is_active = $this->byId("gd-booster")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory Booster
-            $this->logInfo('Activating Booster......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='gd-booster']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("gd-booster", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }

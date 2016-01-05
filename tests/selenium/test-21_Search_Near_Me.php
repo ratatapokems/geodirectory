@@ -22,12 +22,7 @@ class SearchNearMe extends GD_Test
         $is_active = $this->byId("geodirectory-advance-search-filters")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory Advance Search Filters
-            $this->logInfo('Activating Advance Search Filters......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-advance-search-filters']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-advance-search-filters", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }

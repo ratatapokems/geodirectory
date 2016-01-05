@@ -22,12 +22,7 @@ class BuddyPress extends GD_Test
         $is_active = $this->byId("buddypress")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory buddypress
-            $this->logInfo('Activating buddypress......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='buddypress']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("buddypress", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -39,12 +34,7 @@ class BuddyPress extends GD_Test
         $is_active = $this->byId("geodirectory-buddypress-integration")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory buddypress integration
-            $this->logInfo('Activating geodirectory buddypress integration......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-buddypress-integration']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-buddypress-integration", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -59,34 +49,21 @@ class BuddyPress extends GD_Test
         $this->prepareSession()->currentWindow()->maximize();
 
         $to_save = false;
-        $is_checked_1 = $this->byId('geodir_buddypress_bp_register')->attribute('checked');
-        if (!$is_checked_1) {
-            $this->byId('geodir_buddypress_bp_register')->click();
-            $to_save = true;
-        }
 
-        $is_checked_2 = $this->byId('geodir_buddypress_link_listing')->attribute('checked');
-        if (!$is_checked_2) {
-            $this->byId('geodir_buddypress_link_listing')->click();
-            $to_save = true;
-        }
+        $options = array(
+            'geodir_buddypress_bp_register',
+            'geodir_buddypress_link_listing',
+            'geodir_buddypress_link_favorite',
+            'geodir_buddypress_link_author',
+            'geodir_buddypress_show_feature_image'
+        );
 
-        $is_checked_3 = $this->byId('geodir_buddypress_link_favorite')->attribute('checked');
-        if (!$is_checked_3) {
-            $this->byId('geodir_buddypress_link_favorite')->click();
-            $to_save = true;
-        }
-
-        $is_checked_4 = $this->byId('geodir_buddypress_link_author')->attribute('checked');
-        if (!$is_checked_4) {
-            $this->byId('geodir_buddypress_link_author')->click();
-            $to_save = true;
-        }
-
-        $is_checked_5 = $this->byId('geodir_buddypress_show_feature_image')->attribute('checked');
-        if (!$is_checked_5) {
-            $this->byId('geodir_buddypress_show_feature_image')->click();
-            $to_save = true;
+        foreach ($options as $option) {
+            $is_checked = $this->byId($option)->attribute('checked');
+            if (!$is_checked) {
+                $this->byId($option)->click();
+                $to_save = true;
+            }
         }
 
         if ($to_save) {

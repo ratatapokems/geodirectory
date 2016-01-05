@@ -21,12 +21,7 @@ class UpgradeListing extends GD_Test
         $is_active = $this->byId("geodirectory-payment-manager")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory payment manager
-            $this->logInfo('Activating payment manager......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-payment-manager']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-payment-manager", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }

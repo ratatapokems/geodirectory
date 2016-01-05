@@ -22,12 +22,7 @@ class Stripe extends GD_Test
         $is_active = $this->byId("stripe-payment-geodirectory-add-on")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory stripe payment geodirectory add on
-            $this->logInfo('Activating stripe payment geodirectory add on......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='stripe-payment-geodirectory-add-on']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("stripe-payment-geodirectory-add-on", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -38,7 +33,6 @@ class Stripe extends GD_Test
 
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=paymentmanager_fields&subtab=geodir_payment_options');
         $this->waitForPageLoadAndCheckForErrors();
-        //todo: find a way to check strip is active
 
         $this->url(self::GDTEST_BASE_URL.'author/admin/?geodir_dashbord=true&stype=gd_place');
         $this->waitForPageLoadAndCheckForErrors();

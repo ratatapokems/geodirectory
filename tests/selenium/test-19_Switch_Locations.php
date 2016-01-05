@@ -22,12 +22,7 @@ class SwitchLocations extends GD_Test
         $is_active = $this->byId("geodirectory-location-manager")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory Location Manager
-            $this->logInfo('Activating Location manager......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-location-manager']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-location-manager", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -64,12 +59,7 @@ class SwitchLocations extends GD_Test
         $is_active = $this->byId("geodirectory-location-manager")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory Location Manager
-            $this->logInfo('Activating Location manager......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-location-manager']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-location-manager", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -77,14 +67,84 @@ class SwitchLocations extends GD_Test
         $is_active1 = $this->byId("geodirectory-location-manager")->attribute('class');
         $this->assertFalse( strpos($is_active1, 'inactive'), "Location Manager plugin not active");
 
+        // Add few locations
+        // Las vegas
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
         $this->waitForPageLoadAndCheckForErrors();
-        $this->byId('gd_city')->value('las vegas');
+        $this->byId('gd_city')->value('Las Vegas');
+        $this->byId('gd_region')->value('Nevada');
         $this->byId('gd_set_address_button')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->byId('geodir_location_save')->click();
         $this->waitForPageLoadAndCheckForErrors();
         $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //London
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('London');
+        $this->byId('gd_region')->value('Greater London');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //Glasgow
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('Glasgow');
+        $this->byId('gd_region')->value('Glasgow City');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //Mexico City
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('Mexico City');
+        $this->byId('gd_region')->value('Federal District');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //sydney
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('sydney');
+        $this->byId('gd_region')->value('New South Wales');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //tokyo
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('tokyo');
+        $this->byId('gd_region')->value('Tokyo');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
+        //Chennai
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory&tab=managelocation_fields&subtab=geodir_location_addedit');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('gd_city')->value('Chennai');
+        $this->byId('gd_region')->value('Tamil Nadu');
+        $this->byId('gd_set_address_button')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->byId('geodir_location_save')->click();
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->assertTrue( $this->isTextPresent("Location saved successfully."), "'Location saved successfully' text not found");
+
 
         //front end switch locations
         $this->url(self::GDTEST_BASE_URL.'location/united-states/nevada/las-vegas/');

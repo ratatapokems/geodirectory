@@ -18,7 +18,7 @@ class AddReview extends GD_Test
         $this->maybeUserLogin(self::GDTEST_BASE_URL.'places/united-states/new-york/new-york/attractions/test-listing/');
         $this->waitForPageLoadAndCheckForErrors();
         $this->byLinkText('Reviews')->click();
-        //Todo: find a way to rate the stars
+        $this->byId('geodir_overallrating')->value('4');
         $this->byId('comment')->value('Cool xyz');
         $this->byId('submit')->click();
         $this->waitForPageLoadAndCheckForErrors();

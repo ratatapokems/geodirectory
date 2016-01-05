@@ -19,89 +19,33 @@ class Initialize extends GD_Test
 
         $stop_script = false;
 
-        if (!$this->isElementExists("geodirectory")) {
-            $this->logError('Event manager not installed');
-            $stop_script = true;
-        }
+        $plugins = array(
+            'geodirectory',
+            'geodirectory-advance-search-filters',
+            'geodirectory-affiliatewp-integration',
+            'geodirectory-ajax-duplicate-alert',
+            'geodirectory-buddypress-integration',
+            'geodirectory-claim-manager',
+            'geodirectory-custom-post-types',
+            'geodirectory-events',
+            'gd-booster',
+            'geodirectory-location-manager',
+            'geodirectory-marker-cluster',
+            'geodirectory-payment-manager',
+            'geodirectory-re-captcha',
+            'geodirectory-review-rating-manager',
+            'geodirectory-social-importer',
+            'stripe-payment-geodirectory-add-on',
+            'buddypress',
+            'wordpress-database-reset'
+        );
 
-        if (!$this->isElementExists("geodirectory-advance-search-filters")) {
-            $this->logError('GeoDirectory Advance Search Filters not installed');
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-affiliatewp-integration")) {
-            $this->logError("GeoDirectory AffiliateWP Integration not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-ajax-duplicate-alert")) {
-            $this->logError("GeoDirectory Ajax Duplicate Alert not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-buddypress-integration")) {
-            $this->logError("GeoDirectory BuddyPress Integration not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-claim-manager")) {
-            $this->logError("GeoDirectory Claim Manager not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-custom-post-types")) {
-            $this->logError("GeoDirectory Custom Post Types not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-events")) {
-            $this->logError("GeoDirectory Events not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("gd-booster")) {
-            echo "GD Booster not installed";
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-location-manager")) {
-            $this->logError("GeoDirectory Location Manager not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-marker-cluster")) {
-            $this->logError("GeoDirectory Marker Cluster not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-payment-manager")) {
-            $this->logError("GeoDirectory Payment Manager not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-re-captcha")) {
-            $this->logError("GeoDirectory Re-Captcha not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-review-rating-manager")) {
-            $this->logError("GeoDirectory Review Rating Manager not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("geodirectory-social-importer")) {
-            $this->logError("GeoDirectory Social Importer not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("stripe-payment-geodirectory-add-on")) {
-            $this->logError("Stripe Payment GeoDirectory Add-on not installed");
-            $stop_script = true;
-        }
-
-        if (!$this->isElementExists("buddypress")) {
-            $this->logError("BuddyPress not installed");
-            $stop_script = true;
+        foreach ($plugins as $plugin) {
+            if (!$this->isElementExists($plugin)) {
+                $plugin_name = ucwords(str_replace('-', ' ', $plugin));
+                $this->logError($plugin_name.' not installed');
+                $stop_script = true;
+            }
         }
 
         if($stop_script) {
@@ -111,14 +55,7 @@ class Initialize extends GD_Test
 
 
         //Activate WordPress database reset
-        $this->logInfo('Activating WordPress database reset plugin......');
-        $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-        $this->waitForPageLoadAndCheckForErrors();
-        $this->hideAdminBar();
-        if (is_int(strpos($this->byId("wordpress-database-reset")->attribute('class'), 'inactive'))) {
-            $this->byXPath("//tr[@id='wordpress-database-reset']//span[@class='activate']/a")->click();
-        }
-        $this->waitForPageLoadAndCheckForErrors();
+        $this->maybeActivatePlugin("wordpress-database-reset");
 
         //reset the db
         $this->logInfo('Resetting WordPress database......');
@@ -139,90 +76,18 @@ class Initialize extends GD_Test
         $this->waitForPageLoadAndCheckForErrors();
         $this->hideAdminBar();
 
-        if (!is_int(strpos($this->byId("geodirectory")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
+        if(($key = array_search('wordpress-database-reset', $plugins)) !== false) {
+            unset($plugins[$key]);
         }
 
-        if (!is_int(strpos($this->byId("geodirectory-advance-search-filters")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Advance Search Filters is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
+        foreach ($plugins as $plugin) {
+            if (!is_int(strpos($this->byId($plugin)->attribute('class'), 'inactive'))) {
+                $plugin_name = ucwords(str_replace('-', ' ', $plugin));
+                $this->logError($plugin_name." is active. Please deactivate it. It will be activated programatically.");
+                $stop_script = true;
+            }
         }
 
-        if (!is_int(strpos($this->byId("geodirectory-affiliatewp-integration")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory AffiliateWP Integration is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-ajax-duplicate-alert")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Ajax Duplicate Alert is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-buddypress-integration")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory BuddyPress Integration is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-claim-manager")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Claim Manager is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-custom-post-types")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Custom Post Types is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-events")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Events is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("gd-booster")->attribute('class'), 'inactive'))) {
-            $this->logError("GD Booster is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-location-manager")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Location Manager is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-marker-cluster")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Marker Cluster is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-payment-manager")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Payment Manager is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-re-captcha")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Re-Captcha is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-review-rating-manager")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Review Rating Manager is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("geodirectory-social-importer")->attribute('class'), 'inactive'))) {
-            $this->logError("GeoDirectory Social Importer is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("stripe-payment-geodirectory-add-on")->attribute('class'), 'inactive'))) {
-            $this->logError("Stripe Payment GeoDirectory Add-on is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
-
-        if (!is_int(strpos($this->byId("buddypress")->attribute('class'), 'inactive'))) {
-            $this->logError("BuddyPress is active. Please deactivate it. It will be activated programatically.");
-            $stop_script = true;
-        }
 
         if($stop_script) {
             $this->logInfo("Stopping the script. Please fix the errors to continue");
@@ -256,12 +121,7 @@ class Initialize extends GD_Test
         }
 
         //Activate Geodirectory core
-        $this->logInfo('Activating GD Core......');
-        $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-        $this->waitForPageLoadAndCheckForErrors();
-        $this->hideAdminBar();
-        $this->byXPath("//tr[@id='geodirectory']//span[@class='activate']/a")->click();
-        $this->waitForPageLoadAndCheckForErrors(20000);
+        $this->maybeActivatePlugin("geodirectory", 20000);
 
         //set default location
         $this->logInfo('Setting default location......');
@@ -301,12 +161,7 @@ class Initialize extends GD_Test
 
 
         //Activate Geodirectory Events
-        $this->logInfo('Installing event dummy data......');
-        $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-        $this->waitForPageLoadAndCheckForErrors();
-        $this->hideAdminBar();
-        $this->byXPath("//tr[@id='geodirectory-events']//span[@class='activate']/a")->click();
-        $this->waitForPageLoadAndCheckForErrors(20000);
+        $this->maybeActivatePlugin("geodirectory-events", 20000);
 
         //install Events dummy data
         $this->url(self::GDTEST_BASE_URL.'wp-admin/admin.php?page=geodirectory');

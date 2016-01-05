@@ -22,12 +22,7 @@ class ReCaptcha extends GD_Test
         $is_active = $this->byId("geodirectory-re-captcha")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory ReCaptcha
-            $this->logInfo('Activating ReCaptcha......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-re-captcha']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-re-captcha", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -42,12 +37,7 @@ class ReCaptcha extends GD_Test
         $is_active = $this->byId("buddypress")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory buddypress
-            $this->logInfo('Activating buddypress......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='buddypress']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("buddypress", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -59,12 +49,7 @@ class ReCaptcha extends GD_Test
         $is_active = $this->byId("geodirectory-buddypress-integration")->attribute('class');
         if (is_int(strpos($is_active, 'inactive'))) {
             //Activate Geodirectory buddypress integration
-            $this->logInfo('Activating geodirectory buddypress integration......');
-            $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
-            $this->waitForPageLoadAndCheckForErrors();
-            $this->hideAdminBar();
-            $this->byXPath("//tr[@id='geodirectory-buddypress-integration']//span[@class='activate']/a")->click();
-            $this->waitForPageLoadAndCheckForErrors(20000);
+            $this->maybeActivatePlugin("geodirectory-buddypress-integration", 20000);
             //go back to plugin page
             $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
         }
@@ -86,76 +71,25 @@ class ReCaptcha extends GD_Test
             $this->byId('geodir_recaptcha_secret_key')->value('6LcNfgkTAAAAAOq0yCdCFdIoQC55z8F6AwFZ1QOj');
         }
 
-//        if ($this->isElementExists('geodir_recaptcha_registration')) {
-//            $this->byId('geodir_recaptcha_registration')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_add_listing')) {
-//            $this->byId('geodir_recaptcha_add_listing')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_claim_listing')) {
-//            $this->byId('geodir_recaptcha_claim_listing')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_comments')) {
-//            $this->byId('geodir_recaptcha_comments')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_send_to_friend')) {
-//            $this->byId('geodir_recaptcha_send_to_friend')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_send_enquery')) {
-//            $this->byId('geodir_recaptcha_send_enquery')->click();
-//            $to_save = true;
-//        }
-//
-//        if ($this->isElementExists('geodir_recaptcha_buddypress')) {
-//            $this->byId('geodir_recaptcha_buddypress')->click();
-//            $to_save = true;
-//        }
 
         $to_save = false;
-        $is_checked_1 = $this->byId('geodir_recaptcha_registration')->attribute('checked');
-        if (!$is_checked_1) {
-            $this->byId('geodir_recaptcha_registration')->click();
-            $to_save = true;
-        }
-        $is_checked_2 = $this->byId('geodir_recaptcha_add_listing')->attribute('checked');
-        if (!$is_checked_2) {
-            $this->byId('geodir_recaptcha_add_listing')->click();
-            $to_save = true;
-        }
-        $is_checked_3 = $this->byId('geodir_recaptcha_claim_listing')->attribute('checked');
-        if (!$is_checked_3) {
-            $this->byId('geodir_recaptcha_claim_listing')->click();
-            $to_save = true;
-        }
-        $is_checked_4 = $this->byId('geodir_recaptcha_comments')->attribute('checked');
-        if (!$is_checked_4) {
-            $this->byId('geodir_recaptcha_comments')->click();
-            $to_save = true;
-        }
-        $is_checked_5 = $this->byId('geodir_recaptcha_send_to_friend')->attribute('checked');
-        if (!$is_checked_5) {
-            $this->byId('geodir_recaptcha_send_to_friend')->click();
-            $to_save = true;
-        }
-        $is_checked_6 = $this->byId('geodir_recaptcha_send_enquery')->attribute('checked');
-        if (!$is_checked_6) {
-            $this->byId('geodir_recaptcha_send_enquery')->click();
-            $to_save = true;
-        }
-        $is_checked_7 = $this->byId('geodir_recaptcha_buddypress')->attribute('checked');
-        if (!$is_checked_7) {
-            $this->byId('geodir_recaptcha_buddypress')->click();
-            $to_save = true;
+
+        $options = array(
+            'geodir_recaptcha_registration',
+            'geodir_recaptcha_add_listing',
+            'geodir_recaptcha_claim_listing',
+            'geodir_recaptcha_comments',
+            'geodir_recaptcha_send_to_friend',
+            'geodir_recaptcha_send_enquery',
+            'geodir_recaptcha_buddypress'
+        );
+
+        foreach ($options as $option) {
+            $is_checked = $this->byId($option)->attribute('checked');
+            if (!$is_checked) {
+                $this->byId($option)->click();
+                $to_save = true;
+            }
         }
 
         if ($to_save) {

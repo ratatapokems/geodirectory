@@ -158,4 +158,19 @@ class GD_Test extends PHPUnit_Extensions_Selenium2TestCase {
         $this->waitForPageLoadAndCheckForErrors();
     }
 
+    function maybeActivatePlugin($id=false, $timeout=10000) {
+        if (!$id) {
+            return;
+        }
+        $plugin_name = ucwords(str_replace('-', ' ', $id));
+        $this->logInfo('Activating '.$plugin_name.' plugin......');
+        $this->url(self::GDTEST_BASE_URL.'wp-admin/plugins.php');
+        $this->waitForPageLoadAndCheckForErrors();
+        $this->hideAdminBar();
+        if (is_int(strpos($this->byId($id)->attribute('class'), 'inactive'))) {
+            $this->byXPath("//tr[@id='".$id."']//span[@class='activate']/a")->click();
+        }
+        $this->waitForPageLoadAndCheckForErrors($timeout);
+    }
+
 }
