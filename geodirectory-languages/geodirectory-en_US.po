@@ -5314,27 +5314,27 @@ msgstr ""
 
 #: geodirectory-functions/custom_functions.php:63
 msgid "View:"
-msgstr ""
+msgstr "Affichage"
 
 #: geodirectory-functions/custom_functions.php:65
 msgid "View: List"
-msgstr ""
+msgstr "Afficher la liste"
 
 #: geodirectory-functions/custom_functions.php:67
 msgid "View: Grid 2"
-msgstr ""
+msgstr "Afficher 2 endroits par ligne"
 
 #: geodirectory-functions/custom_functions.php:69
 msgid "View: Grid 3"
-msgstr ""
+msgstr "Afficher 3 endroits par ligne"
 
 #: geodirectory-functions/custom_functions.php:71
 msgid "View: Grid 4"
-msgstr ""
+msgstr "Afficher 4 endroits par ligne"
 
 #: geodirectory-functions/custom_functions.php:73
 msgid "View: Grid 5"
-msgstr ""
+msgstr "Afficher 5 endroits par ligne"
 
 #: geodirectory-functions/custom_functions.php:130
 #: geodirectory-functions/custom_functions.php:143
